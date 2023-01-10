@@ -1,26 +1,21 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Openshift-agent-pool
 
 steps:
-- task: redhat.openshift-vsts.oc-cmd-task.oc-cmd@3
+- task: oc-cmd@3
   displayName: 'oc-cmd '
   inputs:
     openshiftService: 'OS-Dev-Test'
     cmd: 'oc new-app https://github.com/rcarneironet/nodejs-ex -l name=vssummit-app'
-- task: redhat.openshift-vsts.oc-cmd-task.oc-cmd@3
+- task: oc-cmd@3
   displayName: 'oc-cmd '
   inputs:
     openshiftService: 'OS-Dev-Test'
     cmd: 'oc start-build nodejs-ex --follow' 
-- task: redhat.openshift-vsts.oc-cmd-task.oc-cmd@3
+- task: oc-cmd@3
   displayName: 'oc-cmd '
   inputs:
     openshiftService: 'OS-Dev-Test'
