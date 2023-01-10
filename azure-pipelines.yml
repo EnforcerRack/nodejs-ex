@@ -24,8 +24,8 @@ steps:
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'OS-Dev-Test'
-    cmd: 'oc project dev-ado-aro'
-    
+    cmd: 'oc project dev-ado-aro' 
+        
 - task: oc-cmd@2
   displayName: 'oc-cmd '
   inputs:
