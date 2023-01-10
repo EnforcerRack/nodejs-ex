@@ -5,15 +5,15 @@ pool:
   name: Openshift-agent-pool
 
 steps:
-- task: oc-cmd@2
-  displayName: 'oc-cmd '
-  inputs:
-    connectionType: OpenShift Connection Service
-    openshiftService: 'OS-Dev-Test'
-    cmd: 'oc status'
+#- task: oc-cmd@2
+#  displayName: 'oc-cmd '
+#  inputs:
+#    connectionType: OpenShift Connection Service
+#    openshiftService: 'OS-Dev-Test'
+#    cmd: 'oc status'
 
 - task: oc-cmd@3
   inputs:
-    connectionType: 'OpenShift Connection Service'
+    connectionType: OpenShift Connection Service
     openshiftService: 'Openshift-dev-connection'
     cmd: 'oc status'
