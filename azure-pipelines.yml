@@ -35,7 +35,7 @@ steps:
 
 
 - task: oc-cmd@2
-  displayName: 'Deploy App from Git'
+  displayName: 'Expose nodejs-ex App'
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'OS-Dev-Test'
