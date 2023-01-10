@@ -31,6 +31,6 @@ steps:
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'OS-Dev-Test'
-    cmd: 'oc new-build --binary --image-stream=dotnet:5.0 --name=dotnet-demo --labels app=dotnet-demo -n demo-dev'
+    cmd: 'oc new-build --binary --image-stream=dotnet:5.0 --name=dotnet-demo --labels app=dotnet-demo -n dev-ado-aro'
 
       
