@@ -13,6 +13,13 @@ steps:
     cmd: 'oc status'
 
 - task: oc-cmd@2
+  displayName: 'Create Project ddev-ado-aro'
+  inputs:
+    connectionType: 'OpenShift Connection Service'
+    openshiftService: 'OS-Dev-Test'
+    cmd: 'oc new-project ddev-ado-aro --display-name ddev-ado-aro'
+
+- task: oc-cmd@2
   displayName: 'Select Project dev-ado-aro'
   inputs:
     connectionType: 'OpenShift Connection Service'
