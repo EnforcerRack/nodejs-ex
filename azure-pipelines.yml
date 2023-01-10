@@ -18,4 +18,10 @@ steps:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'OS-Dev-Test'
     cmd: 'oc status'
-    
+
+- task: oc-cmd@2
+  displayName: 'oc-cmd '
+  inputs:
+    connectionType: 'OpenShift Connection Service'
+    openshiftService: 'OS-Dev-Test'
+    cmd: 'oc start-build dev-ado-aro --follow'
