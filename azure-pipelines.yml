@@ -12,7 +12,8 @@ steps:
 #    openshiftService: 'OS-Dev-Test'
 #    cmd: 'oc status'
 
-- task: oc-cmd@2
+- task: oc-cmd@3
+  displayName: 'oc-cmd '
   inputs:
     connectionType: OpenShift Connection Service
     openshiftService: 'Openshift-dev-connection'
