@@ -31,4 +31,4 @@ steps:
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'OS-Dev-Test'
-    cmd: 'oc start-build example-1 --follow'
+    cmd: 'oc describe build example-1'
