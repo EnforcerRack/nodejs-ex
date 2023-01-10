@@ -32,4 +32,11 @@ steps:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'OS-Dev-Test'
     cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO'
-      
+
+
+- task: oc-cmd@2
+  displayName: 'Deploy App from Git'
+  inputs:
+    connectionType: 'OpenShift Connection Service'
+    openshiftService: 'OS-Dev-Test'
+    cmd: 'oc expose service/nodejs-ex'
