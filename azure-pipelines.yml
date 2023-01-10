@@ -1,22 +1,19 @@
-trigger:
-- master
+#trigger:
+#- master
 
 pool:
   name: Openshift-agent-pool
 
 steps:
-- task: oc-cmd@3
+- task: oc-cmd@2
   displayName: 'oc-cmd '
   inputs:
-    openshiftService: 'OS-Dev-Test'
-    cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=vssummit-app'
-- task: oc-cmd@3
-  displayName: 'oc-cmd '
-  inputs:
+    connectionType: OpenShift Connection Service
     openshiftService: 'OS-Dev-Test'
     cmd: 'oc start-build nodejs-ex --follow' 
-- task: oc-cmd@3
+- task: oc-cmd@2
   displayName: 'oc-cmd '
   inputs:
+    connectionType: OpenShift Connection Service
     openshiftService: 'OS-Dev-Test'
     cmd: 'oc status'
