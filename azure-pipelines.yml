@@ -1,19 +1,87 @@
-#trigger:
-#- master
+# trigger:
+# - master
 
 pool:
   name: Openshift-agent-pool
 
-steps:
-- task: oc-cmd@2
-  displayName: 'oc-cmd '
-  inputs:
-    connectionType: OpenShift Connection Service
-    openshiftService: 'OS-Dev-Test'
-    cmd: 'oc start-build nodejs-ex --follow' 
-- task: oc-cmd@2
-  displayName: 'oc-cmd '
-  inputs:
-    connectionType: OpenShift Connection Service
-    openshiftService: 'OS-Dev-Test'
-    cmd: 'oc status'
+stages:
+- stage: CI
+  displayName: CI Stage
+  jobs:
+
+  - job: build
+    displayName: build
+    steps:
+
+    - task: oc-cmd@2
+      displayName: 'OC Status '
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'OS-Dev-Test'
+        cmd: 'oc status'
+
+    - task: oc-cmd@2
+      displayName: 'Create Project dev-ado-aro'
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'OS-Dev-Test'
+        cmd: 'oc new-project dev-ado-aro --display-name dev-ado-aro'
+
+    - task: oc-cmd@2
+      displayName: 'Select Project dev-ado-aro'
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'OS-Dev-Test'
+        cmd: 'oc project dev-ado-aro' 
+            
+
+
+- stage: CD_DEV
+  displayName: CD-DEV Stage
+  jobs:
+  - deployment: deploy
+    displayName: Deployment
+    environment: OS-Dev-Test
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - task: oc-cmd@2
+            displayName: 'Deploy App from Git'
+            inputs:
+              connectionType: 'OpenShift Connection Service'
+              openshiftService: 'OS-Dev-Test'
+              cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO-DEV'
+
+          - task: oc-cmd@2
+            displayName: 'Expose nodejs-ex App'
+            inputs:
+              connectionType: 'OpenShift Connection Service'
+              openshiftService: 'OS-Dev-Test'
+              cmd: 'oc expose service/nodejs-ex'
+
+# - stage: CD_PROD
+#   displayName: CD-PROD Stage
+#   jobs:
+#   - deployment: deploy
+#     displayName: Deployment in PROD
+#     environment: OS-Dev-Test
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+          
+#           - task: oc-cmd@2
+#             displayName: 'Deploy App from Git'
+#             inputs:
+#               connectionType: 'OpenShift Connection Service'
+#               openshiftService: 'OS-Dev-Test'
+#               cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO-PROD'
+
+#           - task: oc-cmd@2
+#             displayName: 'Expose nodejs-ex App'
+#             inputs:
+#               connectionType: 'OpenShift Connection Service'
+#               openshiftService: 'OS-Dev-Test'
+#               cmd: 'oc expose service/nodejs-ex'
