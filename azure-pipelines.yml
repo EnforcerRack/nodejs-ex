@@ -54,12 +54,12 @@ stages:
               openshiftService: 'OS-Dev-Test'
               cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO-DEV'
 
-          - task: oc-cmd@2
-            displayName: 'Expose nodejs-ex App'
-            inputs:
-              connectionType: 'OpenShift Connection Service'
-              openshiftService: 'OS-Dev-Test'
-              cmd: 'oc expose service/nodejs-ex'
+          # - task: oc-cmd@2
+          #   displayName: 'Expose nodejs-ex App'
+          #   inputs:
+          #     connectionType: 'OpenShift Connection Service'
+          #     openshiftService: 'OS-Dev-Test'
+          #     cmd: 'oc expose service/nodejs-ex'
 
 - stage: CD_PROD
   displayName: CD-PROD Stage
@@ -84,4 +84,4 @@ stages:
             inputs:
               connectionType: 'OpenShift Connection Service'
               openshiftService: 'OS-Dev-Test'
-              cmd: 'oc expose service/nodejs-ex-prod'
+              cmd: 'oc expose service/nodejs-ex'
