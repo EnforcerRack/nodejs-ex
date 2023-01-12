@@ -84,4 +84,4 @@ stages:
             inputs:
               connectionType: 'OpenShift Connection Service'
               openshiftService: 'OS-Dev-Test'
-              cmd: 'oc expose service/nodejs-ex'
+              cmd: 'oc expose service/nodejs-ex-prod'
