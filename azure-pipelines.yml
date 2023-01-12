@@ -46,13 +46,38 @@ stages:
       runOnce:
         deploy:
           steps:
-          
+
           - task: oc-cmd@2
             displayName: 'Deploy App from Git'
             inputs:
               connectionType: 'OpenShift Connection Service'
               openshiftService: 'OS-Dev-Test'
               cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO'
+
+          - task: oc-cmd@2
+            displayName: 'Expose nodejs-ex App'
+            inputs:
+              connectionType: 'OpenShift Connection Service'
+              openshiftService: 'OS-Dev-Test'
+              cmd: 'oc expose service/nodejs-ex'
+
+- stage: CD_PROD
+  displayName: CD-PROD Stage
+  jobs:
+  - deployment: deploy
+    displayName: Deployment in PROD
+    environment: OS-Dev-Test
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          
+          - task: oc-cmd@2
+            displayName: 'Deploy App from Git'
+            inputs:
+              connectionType: 'OpenShift Connection Service'
+              openshiftService: 'OS-Dev-Test'
+              cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO-PROD'
 
           - task: oc-cmd@2
             displayName: 'Expose nodejs-ex App'
