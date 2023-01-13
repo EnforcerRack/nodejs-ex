@@ -64,7 +64,7 @@ stages:
             inputs:
               connectionType: 'OpenShift Connection Service'
               openshiftService: 'OS-Dev-Test'
-              cmd: 'oc new-app https://fcbarcelona-devops@dev.azure.com/fcbarcelona-devops/eticketfcb/_git/middleware-test -l name=ADO-ARO-DEV'
+              cmd: 'oc new-app $(Pipeline.Workspace) -l name=ADO-ARO-DEV'
 
           - task: oc-cmd@2
             displayName: 'Expose nodejs-ex App'
