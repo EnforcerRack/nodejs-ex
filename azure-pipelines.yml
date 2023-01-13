@@ -13,6 +13,18 @@ stages:
     displayName: build
     steps:
 
+    - task: CopyFiles@2
+      displayName: 'Copy manifest to staging area to be published'
+      inputs:
+        SourceFolder:
+        Contents: '**'
+        TargetFolder: '$(Pipeline.Workspace)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Pipeline.Workspace)'
+        ArtifactName: 'manifest'
+        publishLocation: 'Container'
+
     - task: oc-cmd@2
       displayName: 'OC Status '
       inputs:
