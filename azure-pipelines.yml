@@ -85,7 +85,7 @@ stages:
               inputs:
                 connectionType: 'OpenShift Connection Service'
                 openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc new-app $(Build.ArtifactStagingDirectory) -l name=ADO-ARO-DEV'
+                cmd: 'oc new-app $(Build.ArtifactStagingDirectory)/artifact -l name=ADO-ARO-DEV'
 
             - task: oc-cmd@2
               displayName: 'Expose nodejs-ex App'
