@@ -2,83 +2,104 @@
 # - master
 
 pool:
-  name: Openshift-agent-pool
+  name: OpenShift-agent-pool-STG
 
 stages:
-- stage: CI
-  displayName: CI Stage
-  jobs:
 
-  - job: build
-    displayName: build
-    steps:
+  - stage: CI
+    displayName: CI Stage
+    jobs:
+  
+    - job: build
+      displayName: build
+  
+      steps:
+  
+      - task: CopyFiles@2
+        inputs:
+          contents: '**'
+          targetFolder: $(Build.ArtifactStagingDirectory)
+  
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathToPublish: $(Build.ArtifactStagingDirectory)
+          artifactName: artifact
 
-    - task: CopyFiles@2
-      displayName: 'Copy manifest to staging area to be published'
-      inputs:
-        SourceFolder:
-        Contents: '**'
-        TargetFolder: '$(Pipeline.Workspace)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Pipeline.Workspace)'
-        ArtifactName: 'manifest'
-        publishLocation: 'Container'
+# stages:
+# - stage: CI
+#   displayName: CI Stage
+#   jobs:
 
-    - task: oc-cmd@2
-      displayName: 'OC Status '
-      inputs:
-        connectionType: 'OpenShift Connection Service'
-        openshiftService: 'OS-Dev-Test'
-        cmd: 'oc status'
+#   - job: build
+#     displayName: build
+#     steps:
 
-    - task: oc-cmd@2
-      displayName: 'Create Project dev-ado-aro'
-      inputs:
-        connectionType: 'OpenShift Connection Service'
-        openshiftService: 'OS-Dev-Test'
-        cmd: 'oc new-project dev-ado-aro --display-name dev-ado-aro'
-
-    - task: oc-cmd@2
-      displayName: 'Select Project dev-ado-aro'
-      inputs:
-        connectionType: 'OpenShift Connection Service'
-        openshiftService: 'OS-Dev-Test'
-        cmd: 'oc project dev-ado-aro' 
-            
+#     - task: CopyFiles@2
+#       displayName: 'Copy manifest to staging area to be published'
+#       inputs:
+#         SourceFolder:
+#         Contents: '**'
+#         TargetFolder: '$(Pipeline.Workspace)'
+#     - task: PublishBuildArtifacts@1
+#       inputs:
+#         PathtoPublish: '$(Pipeline.Workspace)'
+#         ArtifactName: 'manifest'
+#         publishLocation: 'Container'
 
 
-- stage: CD_DEV
-  displayName: CD-DEV Stage
-  jobs:
-  - deployment: deploy
-    displayName: Deployment
-    environment: OS-Dev-Test
-    strategy:
-      runOnce:
-        deploy:
-          steps:
+  - stage: CD_DEV
+    displayName: CD-DEV Stage
+    jobs:
+    - deployment: deploy
+      displayName: Deployment
+      environment: OpenShift-ADO-ARO-STG
+      strategy:
+        runOnce:
+          deploy:
+            steps:
 
-          - task: oc-cmd@2
-            displayName: 'Deploy App from Git'
-            inputs:
-              connectionType: 'OpenShift Connection Service'
-              openshiftService: 'OS-Dev-Test'
-              cmd: 'oc new-app $(Pipeline.Workspace) -l name=ADO-ARO-DEV'
 
-          - task: oc-cmd@2
-            displayName: 'Expose nodejs-ex App'
-            inputs:
-              connectionType: 'OpenShift Connection Service'
-              openshiftService: 'OS-Dev-Test'
-              cmd: 'oc expose service/nodejs-ex'
+            - task: oc-cmd@2
+              displayName: 'OC Status '
+              inputs:
+                connectionType: 'OpenShift Connection Service'
+                openshiftService: 'OpenShift-ADO-ARO-STG'
+                cmd: 'oc status'
+      
+            - task: oc-cmd@2
+              displayName: 'Create Project dev-ado-aro'
+              inputs:
+                connectionType: 'OpenShift Connection Service'
+                openshiftService: 'OpenShift-ADO-ARO-STG'
+                cmd: 'oc new-project dev-ado-aro --display-name dev-ado-aro'
+      
+            - task: oc-cmd@2
+              displayName: 'Select Project dev-ado-aro'
+              inputs:
+                connectionType: 'OpenShift Connection Service'
+                openshiftService: 'OpenShift-ADO-ARO-STG'
+                cmd: 'oc project dev-ado-aro' 
+                  
+            - task: oc-cmd@2
+              displayName: 'Deploy App from Git'
+              inputs:
+                connectionType: 'OpenShift Connection Service'
+                openshiftService: 'OpenShift-ADO-ARO-STG'
+                cmd: 'oc new-app $(Build.ArtifactStagingDirectory) -l name=ADO-ARO-DEV'
+
+            - task: oc-cmd@2
+              displayName: 'Expose nodejs-ex App'
+              inputs:
+                connectionType: 'OpenShift Connection Service'
+                openshiftService: 'OpenShift-ADO-ARO-STG'
+                cmd: 'oc expose service/nodejs-ex'
 
 # - stage: CD_PROD
 #   displayName: CD-PROD Stage
 #   jobs:
 #   - deployment: deploy
 #     displayName: Deployment in PROD
-#     environment: OS-Dev-Test
+#     environment: OpenShift-ADO-ARO-STG
 #     strategy:
 #       runOnce:
 #         deploy:
@@ -88,12 +109,12 @@ stages:
 #             displayName: 'Deploy App from Git'
 #             inputs:
 #               connectionType: 'OpenShift Connection Service'
-#               openshiftService: 'OS-Dev-Test'
+#               openshiftService: 'OpenShift-ADO-ARO-STG'
 #               cmd: 'oc new-app https://github.com/EnforcerRack/nodejs-ex -l name=ADO-ARO-PROD'
 
 #           - task: oc-cmd@2
 #             displayName: 'Expose nodejs-ex App'
 #             inputs:
 #               connectionType: 'OpenShift Connection Service'
-#               openshiftService: 'OS-Dev-Test'
+#               openshiftService: 'OpenShift-ADO-ARO-STG'
 #               cmd: 'oc expose service/nodejs-ex'
