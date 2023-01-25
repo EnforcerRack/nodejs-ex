@@ -18,11 +18,11 @@ stages:
       - task: CopyFiles@2
         inputs:
           contents: '**'
-          targetFolder: $(Build.ArtifactStagingDirectory)
+          targetFolder: $(Pipeline.Workspace)
   
       - task: PublishBuildArtifacts@1
         inputs:
-          pathToPublish: $(Build.ArtifactStagingDirectory)
+          pathToPublish: $(Pipeline.Workspace)
           artifactName: artifact
 
 # stages:
@@ -85,7 +85,7 @@ stages:
               inputs:
                 connectionType: 'OpenShift Connection Service'
                 openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc new-app $(Build.ArtifactStagingDirectory)/artifact -l name=ADO-ARO-DEV'
+                cmd: 'oc new-app $(Pipeline.Workspace) -l name=ADO-ARO-DEV'
 
             - task: oc-cmd@2
               displayName: 'Expose nodejs-ex App'
