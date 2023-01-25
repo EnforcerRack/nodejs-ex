@@ -18,11 +18,11 @@ stages:
       - task: CopyFiles@2
         inputs:
           contents: '**'
-          targetFolder: $(Pipeline.Workspace)
+          targetFolder: $(Build.ArtifactStagingDirectory)
   
       - task: PublishBuildArtifacts@1
         inputs:
-          pathToPublish: $(Pipeline.Workspace)
+          pathToPublish: $(Build.ArtifactStagingDirectory)
           artifactName: artifact
 
 # stages:
@@ -47,52 +47,52 @@ stages:
 #         publishLocation: 'Container'
 
 
-  - stage: CD_DEV
-    displayName: CD-DEV Stage
-    jobs:
-    - deployment: deploy
-      displayName: Deployment
-      environment: OpenShift-ADO-ARO-STG
-      strategy:
-        runOnce:
-          deploy:
-            steps:
+  # - stage: CD_DEV
+  #   displayName: CD-DEV Stage
+  #   jobs:
+  #   - deployment: deploy
+  #     displayName: Deployment
+  #     environment: OpenShift-ADO-ARO-STG
+  #     strategy:
+  #       runOnce:
+  #         deploy:
+  #           steps:
 
 
-            - task: oc-cmd@2
-              displayName: 'OC Status '
-              inputs:
-                connectionType: 'OpenShift Connection Service'
-                openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc status'
+  #           - task: oc-cmd@2
+  #             displayName: 'OC Status '
+  #             inputs:
+  #               connectionType: 'OpenShift Connection Service'
+  #               openshiftService: 'OpenShift-ADO-ARO-STG'
+  #               cmd: 'oc status'
       
-            - task: oc-cmd@2
-              displayName: 'Create Project dev-ado-aro'
-              inputs:
-                connectionType: 'OpenShift Connection Service'
-                openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc new-project dev-ado-aro --display-name dev-ado-aro'
+  #           - task: oc-cmd@2
+  #             displayName: 'Create Project dev-ado-aro'
+  #             inputs:
+  #               connectionType: 'OpenShift Connection Service'
+  #               openshiftService: 'OpenShift-ADO-ARO-STG'
+  #               cmd: 'oc new-project dev-ado-aro --display-name dev-ado-aro'
       
-            - task: oc-cmd@2
-              displayName: 'Select Project dev-ado-aro'
-              inputs:
-                connectionType: 'OpenShift Connection Service'
-                openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc project dev-ado-aro' 
+  #           - task: oc-cmd@2
+  #             displayName: 'Select Project dev-ado-aro'
+  #             inputs:
+  #               connectionType: 'OpenShift Connection Service'
+  #               openshiftService: 'OpenShift-ADO-ARO-STG'
+  #               cmd: 'oc project dev-ado-aro' 
                   
-            - task: oc-cmd@2
-              displayName: 'Deploy App from Git'
-              inputs:
-                connectionType: 'OpenShift Connection Service'
-                openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc new-app $(Pipeline.Workspace) -l name=ADO-ARO-DEV'
+  #           - task: oc-cmd@2
+  #             displayName: 'Deploy App from Git'
+  #             inputs:
+  #               connectionType: 'OpenShift Connection Service'
+  #               openshiftService: 'OpenShift-ADO-ARO-STG'
+  #               cmd: 'oc new-app $(Build.ArtifactStagingDirectory)/artifact -l name=ADO-ARO-DEV'
 
-            - task: oc-cmd@2
-              displayName: 'Expose nodejs-ex App'
-              inputs:
-                connectionType: 'OpenShift Connection Service'
-                openshiftService: 'OpenShift-ADO-ARO-STG'
-                cmd: 'oc expose service/nodejs-ex'
+  #           - task: oc-cmd@2
+  #             displayName: 'Expose nodejs-ex App'
+  #             inputs:
+  #               connectionType: 'OpenShift Connection Service'
+  #               openshiftService: 'OpenShift-ADO-ARO-STG'
+  #               cmd: 'oc expose service/nodejs-ex'
 
 # - stage: CD_PROD
 #   displayName: CD-PROD Stage
